@@ -2,7 +2,7 @@
 {% block content %}
 
     <div class="container">
-        <br><br>
+        <br><br><br><br><br>
         <div class="card mb-3">
             <div class="row g-0">
               <div class="col-md-4">
@@ -31,7 +31,7 @@
 
                   {% else %}
                     ${{ product.price }}
-                    <br>ID: {{ product.id }}
+                    <br>
                   {% endif %}
                   <br><br>
                   <a href="{% url 'home' %}" class="btn btn-secondary">Home</a>
@@ -61,7 +61,9 @@ $(document).on('click', '#add-cart', function(e){
         action: 'post'
       },
       success: function(json){
-        console.log(json)
+        //console.log(json)
+        document.getElementById('cart_quantity').
+        textContent = json.qty
       },
       error: function(xhr, errmsg, err){
 
