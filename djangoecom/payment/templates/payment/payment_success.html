@@ -1,1 +1,16 @@
-<h1>Payment Success</h1>
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="card shadow-lg border-success">
+                <div class="card-body">
+                    <h1 class="display-4 text-success mb-3"><i class="bi bi-check-circle-fill"></i> Payment Successful!</h1>
+                    <p class="lead">Thank you for your purchase. Your payment was processed successfully.<br>Enjoy shopping with LootBox!</p>
+                    <a href="{% url 'home' %}" class="btn btn-success mt-3">Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

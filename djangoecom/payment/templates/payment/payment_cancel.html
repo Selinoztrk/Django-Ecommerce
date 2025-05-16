@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="card shadow-lg border-danger">
+                <div class="card-body">
+                    <h1 class="display-4 text-danger mb-3"><i class="bi bi-x-circle-fill"></i> Payment Canceled</h1>
+                    <p class="lead">Your payment was not completed.<br>If this was a mistake, you can try again or contact support for help.</p>
+                    <a href="{% url 'home' %}" class="btn btn-danger mt-3">Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

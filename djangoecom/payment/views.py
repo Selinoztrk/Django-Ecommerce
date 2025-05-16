@@ -6,10 +6,22 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from store.models import Product, Profile
 import datetime
+# Stripe imports
+import stripe
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 def payment_success(request):
     return render(request, 'payment/payment_success.html', {})
+
+
+def payment_cancel(request):
+    return render(request, 'payment/payment_cancel.html', {})
 
 
 def checkout(request):
@@ -32,6 +44,43 @@ def checkout(request):
                       {"cart_products":cart_products, "quantities":quantities, "totals":totals, "shipping_form":shipping_form})
 
 
+@csrf_exempt
+def create_checkout_session(request):
+    if request.method == 'POST':
+        try:
+            cart = Cart(request)
+            cart_products = cart.get_prods()
+            quantities = cart.get_quants()
+            line_items = []
+
+            for product in cart_products:
+                quantity = quantities.get(str(product.id), 1)
+                price = product.sale_price if product.is_sale else product.price
+                line_items.append({
+                    'price_data': {
+                        'currency': 'usd',
+                        'product_data': {
+                            'name': product.name,
+                        },
+                        'unit_amount': int(price * 100),
+                    },
+                    'quantity': quantity,
+                })
+
+            session = stripe.checkout.Session.create(
+                payment_method_types=['card'],
+                line_items=line_items,
+                mode='payment',
+                success_url='http://django-ecommerce-production-96f5.up.railway.app/payment/payment_success/',
+                cancel_url='http://django-ecommerce-production-96f5.up.railway.app/payment/payment_cancel/',
+            )
+            return JsonResponse({'id': session.id})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+
 def billing_info(request):
     if request.POST:
         # Get the cart
@@ -44,22 +93,33 @@ def billing_info(request):
         my_shipping = request.POST
         request.session['my_shipping'] = my_shipping
 
+        # Stripe Key
+        stripe_publishable_key = settings.STRIPE_PUBLISHABLE_KEY
+
         # Check to see if user is logged in
         if request.user.is_authenticated:
-            # Get the Billing Form
             billing_form = PaymentForm()
             return render(request, "payment/billing_info.html", 
-                        {"cart_products":cart_products, "quantities":quantities, "totals":totals, "shipping_info":request.POST, "billing_form":billing_form})
+                        {
+                            "cart_products": cart_products,
+                            "quantities": quantities,
+                            "totals": totals,
+                            "shipping_info": request.POST,
+                            "billing_form": billing_form,
+                            "stripe_pub_key": settings.STRIPE_PUBLISHABLE_KEY
+                        })
         else:
-            # Not logged in
-            # Get the Billing Form
             billing_form = PaymentForm()
             return render(request, "payment/billing_info.html", 
-                        {"cart_products":cart_products, "quantities":quantities, "totals":totals, "shipping_info":request.POST, "billing_form":billing_form})
+                        {
+                            "cart_products": cart_products,
+                            "quantities": quantities,
+                            "totals": totals,
+                            "shipping_info": request.POST,
+                            "billing_form": billing_form,
+                            "stripe_pub_key": settings.STRIPE_PUBLISHABLE_KEY
+                        })
 
-        shipping_form = request.POST
-        return render(request, "payment/billing_info.html", 
-                        {"cart_products":cart_products, "quantities":quantities, "totals":totals, "shipping_form":shipping_form})
     else:
         messages.success(request, "Access Denied")
         return redirect('home')

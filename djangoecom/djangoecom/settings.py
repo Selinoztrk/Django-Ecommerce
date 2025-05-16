@@ -2,6 +2,7 @@ from pathlib import Path
 import os
 import dj_database_url
 from dotenv import load_dotenv
+from decouple import config
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -16,10 +17,14 @@ load_dotenv()
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-!*uii9zuv_*#8eg^9xau_=g=yqcy&zejfhxzth6-^r@^vpseki'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Stripe settings
+STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
+STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY')
 
-ALLOWED_HOSTS = ['django-ecommerce-production-96f5.up.railway.app']
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = False
+
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'django-ecommerce-production-96f5.up.railway.app']
 CSRF_TRUSTED_ORIGINS = ['https://django-ecommerce-production-96f5.up.railway.app']
 
 # Application definition
