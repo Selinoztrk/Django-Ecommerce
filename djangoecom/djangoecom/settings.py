@@ -22,7 +22,7 @@ STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
 STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'django-ecommerce-production-96f5.up.railway.app']
 CSRF_TRUSTED_ORIGINS = ['https://django-ecommerce-production-96f5.up.railway.app']
