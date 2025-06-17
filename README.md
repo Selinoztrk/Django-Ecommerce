@@ -107,19 +107,19 @@ djangoecom/
 
 ### Home Page
 
-![Home Page](screenshots/homepage.png)
+![Home Page](djangoecom/screenshots/homepage.png)
 
 ### Product Detail
 
-![Product Detail](screenshots/product.png)
+![Product Detail](djangoecom/screenshots/product.png)
 
 ### Cart Page
 
-![Cart](screenshots/cart.png)
+![Cart](djangoecom/screenshots/cart.png)
 
 ### Payment Success
 
-![Success](screenshots/payment_success.png)
+![Success](djangoecom/screenshots/payment_success.png)
 
 ---
 
